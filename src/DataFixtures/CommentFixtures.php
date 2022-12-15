@@ -2,32 +2,36 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Post;
+use App\Entity\Comment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class PostFixtures extends Fixture implements DependentFixtureInterface
+class CommentFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
         $faker = Faker\Factory::create('fr_FR');
 
-        for ($i = 0; $i < 10; $i++) {
-            $post = new Post;
-            $post->setTitle($faker->words(rand(3,10), true))
-                ->setDescription($faker->paragraphs(rand(2, 10), true))
-                ->setAuthor($faker->firstname())
-                ->setImage('http://placeimg.com/30'.$i.'/300/any')
-                ->setUser($this->getReference('admin' . rand(0, 4)));
-            
-            for($j = 0; $j < rand(1, 3); $j++) {
-                $post->addCategory($this->getReference('category' . rand(0, 4)));
-            }
-                
+        for ($i = 0; $i < 5; $i++) {
+            $comment = new Comment;
+            $comment->setContent($faker->paragraph())
+                ->setUser($this->getReference('admin' . rand(0, 4)))
+                ->setPost($this->getReference('post' . rand(0, 9)))
+            ;
 
-            $manager->persist($post);
+            $manager->persist($comment);
+        }
+
+        for ($i = 0; $i < 5; $i++) {
+            $comment = new Comment;
+            $comment->setContent($faker->paragraph())
+                ->setUser($this->getReference('user' . rand(0, 4)))
+                ->setPost($this->getReference('post' . rand(0, 9)))
+            ;
+
+            $manager->persist($comment);
         }
 
         $manager->flush();
@@ -36,8 +40,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            CategoryFixtures::class,
-            UserFixtures::class
+            PostFixtures::class
         ];
     }
 }
