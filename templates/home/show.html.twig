@@ -15,11 +15,12 @@
 				{{ post.createdAt | date('d/m/Y') }}
 			</div>
 		</div>
+		{{ form(form) }}
 		{% for comment in comments %}
 			<div class="card border-primary mb-3" style="max-width: 20rem;">
-				<div class="card-header">{{ comment.user.username }}</div>
+				<div class="card-header">{{ comment.createdAt | date('d/m/Y à H:i') }}</div>
 				<div class="card-body">
-					<h4 class="card-title">{{ comment.createdAt | date('d/m/Y') }}</h4>
+					<h4 class="card-title">{{ comment.user.username }}</h4>
 					<p class="card-text">{{ comment.content }}</p>
 				</div>
 			</div>

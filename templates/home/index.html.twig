@@ -17,7 +17,7 @@
 					<h3 class="card-header"><a href="/post/{{ post.id }}">{{ post.title }}</a></h3>
                     <img src="{{ post.image }}" alt="{{ post.title }}">
 					<div class="card-body">
-						<p class="card-text">{{ post.description | slice (0, 100)}} <a href="/post/{{ post.id }}">...</a></p>
+						<p class="card-text">{{ post.description | slice (0, 100)}} <a href= "{{ path('show', {'id': post.id}) }}">...</a></p>
 					</div>
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item">{{ post.author }}</li>
