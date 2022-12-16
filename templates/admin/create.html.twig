@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+	<h1>Créer votre article</h1>
+		{{ form_start(form) }}
+			{{ form_row(form.title, {label: 'Titre'}) }}
+			{{ form_row(form.description) }}
+			{{ form_row(form.image, {label: 'Url de l\'image'}) }}
+			{{ form_row(form.isPublished, {label: 'Publier'}) }}
+			{{ form_row(form.categories, {label: 'Catégories'}) }}
+			<input type="submit" value="Enregistrer" class="btn btn-secondary">
+		{{ form_end(form) }}
+{% endblock %}

@@ -32,7 +32,6 @@ class Comment
 
     public function __construct()
     {
-        $this->setCreatedAt(new DateTime());
     }
 
     public function getId(): ?int
