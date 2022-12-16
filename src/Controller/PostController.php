@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PostController extends AbstractController
 {
@@ -35,7 +34,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/Post/category/{id<[0-9]+>}', name:'index_by_category')]
-    public function indexByCategory(Category $category)
+    public function indexByCategory(Category $category): Response
     {
           return $this->render('home/index.html.twig', [
             'posts' => $category->getPosts(),
@@ -44,7 +43,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/Post/search', name: 'index_by_search')]
-    public function indexBySearch(Request $request)
+    public function indexBySearch(Request $request): Response
     {
         $search = $request->request->get('search');
 
