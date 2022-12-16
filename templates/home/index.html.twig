@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!
-{% endblock %}
+{% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
 	<h1 class="text-center">Liste de tous les articles</h1>
@@ -12,21 +11,23 @@
 	</div>
 	<div class="row">
 		{% for post in posts %}
-			<div class="col-4">
-				<div class="card mb-3">
-					<h3 class="card-header"><a href="/post/{{ post.id }}">{{ post.title }}</a></h3>
-                    <img src="{{ post.image }}" alt="{{ post.title }}">
-					<div class="card-body">
-						<p class="card-text">{{ post.description | slice (0, 100)}} <a href= "{{ path('show', {'id': post.id}) }}">...</a></p>
-					</div>
-					<ul class="list-group list-group-flush">
-						<li class="list-group-item">{{ post.author }}</li>
-					</ul>
-					<div class="card-footer text-muted">
-						{{ post.createdAt | date('d/m/Y') }}
+			{% if post.isPublished %}
+				<div class="col-4">
+					<div class="card mb-3">
+						<h3 class="card-header"><a href="/post/{{ post.id }}">{{ post.title }}</a></h3>
+						<img src="{{ post.image }}" alt="{{ post.title }}">
+						<div class="card-body">
+							<p class="card-text">{{ post.description | slice (0, 100)}} <a href= "{{ path('show', {'id': post.id}) }}">...</a></p>
+						</div>
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">{{ post.user.username }}</li>
+						</ul>
+						<div class="card-footer text-muted">
+							{{ post.createdAt | date('d/m/Y') }}
+						</div>
 					</div>
 				</div>
-			</div>
+			{% endif %}
 		{% endfor %}
 	</div>
 

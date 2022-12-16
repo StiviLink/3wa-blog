@@ -48,6 +48,7 @@ class PostRepository extends ServiceEntityRepository
            ->andWhere('p.title LIKE :val')
            ->orWhere('p.author LIKE :val')
            ->orWhere('p.description LIKE :val')
+           ->andWhere('p.isPublished = true')
            ->setParameter('val', '%' . $value . '%')
            ->getQuery()
            ->getResult()

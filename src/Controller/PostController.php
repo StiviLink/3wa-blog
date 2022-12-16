@@ -15,19 +15,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class PostController extends AbstractController
 {
     public function __construct(
-        private CategoryRepository $categoryRepository,
-        private PostRepository $postRepository
+        private readonly CategoryRepository $categoryRepository,
+        private readonly PostRepository     $postRepository,
+        private readonly CommentRepository $commentRepository
         ){}
 
     #[Route('/', name: 'home')]
     public function index(): Response
     {
         return $this->render('home/index.html.twig', [
-            'posts' =>  $this->postRepository->findAll(),
+            'posts' =>  $this->postRepository->findBy(['isPublished' => true]),
             'categories' => $this->categoryRepository->findall()
         ]);
     }
@@ -53,13 +55,17 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{id<[0-9]+>}', name: 'show')]
-    public function show(Post $post, CommentRepository $commentRepository, Request $request, EntityManagerInterface $manager): Response
+    public function show(Post $post, Request $request, EntityManagerInterface $manager): Response
     {
+        if(!($this->IsGranted('ROLE_ADMIN') || $post->isIsPublished())){
+            return $this->redirectToRoute('home');
+        }
+
         $comment = new Comment;
         $form = $this->createForm(CommentFormType::class, $comment);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid() && $this->getUser()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment->setUser($this->getUser())
                 ->setCreatedAt(new DateTime())
                 ->setPost($post)
@@ -71,7 +77,7 @@ class PostController extends AbstractController
 
         return $this->render('home/show.html.twig', [
             'post' => $post,
-            'comments' => $commentRepository->findBy(['post' => $post], ['createdAt' => 'DESC']),
+            'comments' => $this->commentRepository->findBy(['post' => $post], ['createdAt' => 'DESC']),
             'form' => $form
         ]);
     }
